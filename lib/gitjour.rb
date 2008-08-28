@@ -86,7 +86,7 @@ module Gitjour
           end
         end
 
-        `git-daemon --verbose --export-all --port=#{port} --base-path=#{path} --base-path-relaxed`
+        `git daemon --verbose --export-all --port=#{port} --base-path=#{path} --base-path-relaxed`
       end
 
       def help
