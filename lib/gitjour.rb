@@ -39,7 +39,7 @@ module Gitjour
 			end
 
       def clone(repository_name, *rest)
-        dir = rest.shift || repository_name
+        dir = (rest.shift || repository_name).split(":").last
         if File.exists?(dir)
           exit_with! "ERROR: Clone directory '#{dir}' already exists."
         end
@@ -72,21 +72,30 @@ module Gitjour
         else
           prefix = `git config --get gitjour.prefix`.chomp
           prefix = ENV["USER"] if prefix.empty?
-          name   = [prefix, name].compact.join("-")
+          name   = [prefix, name].compact.join(":")
         end
 
+        git_deamon_options = [
+          "--verbose",
+          "--port=#{port}",
+          "--base-path=#{File.dirname(path)}",
+          "--export-all",
+          "--base-path-relaxed"
+        ]
         if File.exists?("#{path}/.git")
           announce_repo(path, name, port.to_i)
+          git_deamon_options << path
         else
           Dir["#{path}/*"].each do |dir|
             if File.directory?(dir)
               name = File.basename(dir)
               announce_repo(dir, name, 9418)
+              git_deamon_options << path
             end
           end
         end
 
-        `git daemon --verbose --export-all --port=#{port} --base-path=#{path} --base-path-relaxed`
+        `git daemon #{git_deamon_options.join(' ')}`
       end
 
       def help
