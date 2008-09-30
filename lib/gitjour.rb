@@ -52,7 +52,7 @@ module Gitjour
 
         puts "Connecting to #{service.host}:#{service.port}"
 
-        system "git clone git://#{service.host}:#{service.port}/ #{dir}/"
+        system "git clone git://#{service.host}:#{service.port}/ #{dir}"
       end
 
       def remote(repository_name, *rest)
@@ -90,7 +90,7 @@ module Gitjour
       end
 
       def help
-        puts "Gitjour #{Gitjour::VERSION::STRING}"
+        puts "Gitjour #{Gitjour::VERSION}"
         puts "Serve up and use git repositories via Bonjour/DNSSD."
         puts "\nUsage: gitjour <command> [args]"
         puts
